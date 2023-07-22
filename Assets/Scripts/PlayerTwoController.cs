@@ -1,12 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerTwoController : MonoBehaviour
 {
     private Rigidbody2D rb; // or Rigidbody for 3D
 
     private bool isGravityInverted = false;
-    private float normalGravityScale = 1.0f;
-    private float invertedGravityScale = -1.0f;
+    private float normalGravityScale = -1.0f;
+    private float invertedGravityScale = 1.0f;
     private float rotationSpeed = 100f;
 
     private float sizeChangeRate = 0.1f;
@@ -29,13 +31,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (isOnGround || isOnIce))
+        if (Input.GetKeyDown(KeyCode.UpArrow) && (isOnGround || isOnIce))
         {
             isGravityInverted = !isGravityInverted;
             UpdateGravity();
         }
 
-        if(isOnGround)
+        if (isOnGround)
         {
             Vector3 newScale = transform.localScale - Vector3.one * sizeChangeRate * Time.deltaTime;
             newScale = Vector3.Max(newScale, originalScale * minSize);
@@ -70,8 +72,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-       if(!isGravityInverted) transform.Rotate(Vector3.back * rotationSpeed * Time.deltaTime);
-       else transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
+        if (isGravityInverted) transform.Rotate(Vector3.back * rotationSpeed * Time.deltaTime);
+        else transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -86,10 +88,10 @@ public class PlayerController : MonoBehaviour
             isGravityInverted = !isGravityInverted;
             UpdateGravity();
         }
-        else if(collision.gameObject.CompareTag("Snow")){
+        else if (collision.gameObject.CompareTag("Snow"))
+        {
             isOnIce = true;
         }
-        
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -98,7 +100,7 @@ public class PlayerController : MonoBehaviour
         {
             isOnGround = false;
         }
-        else if(collision.gameObject.CompareTag("Snow"))
+        else if (collision.gameObject.CompareTag("Snow"))
         {
             isOnIce = false;
         }
